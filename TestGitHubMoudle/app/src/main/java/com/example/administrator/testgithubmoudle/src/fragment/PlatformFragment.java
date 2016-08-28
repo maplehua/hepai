@@ -1,5 +1,6 @@
 package com.example.administrator.testgithubmoudle.src.fragment;
 
+import android.app.Activity;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
@@ -10,15 +11,6 @@ import android.view.ViewGroup;
 
 import com.example.administrator.testgithubmoudle.R;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link PlatformFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link PlatformFragment#newInstance} factory method to
- * create an instance of this fragment.
- *
- */
 public class PlatformFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -29,7 +21,13 @@ public class PlatformFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
+    private Context mContext;
+
     private OnFragmentInteractionListener mListener;
+
+    public PlatformFragment() {
+        // Required empty public constructor
+    }
 
     /**
      * Use this factory method to create a new instance of
@@ -47,9 +45,6 @@ public class PlatformFragment extends Fragment {
         args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
-    }
-    public PlatformFragment() {
-        // Required empty public constructor
     }
 
     @Override
@@ -78,12 +73,12 @@ public class PlatformFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
+//        if (context instanceof OnFragmentInteractionListener) {
+//            mListener = (OnFragmentInteractionListener) context;
+//        } else {
+//            throw new RuntimeException(context.toString()
+//                    + " must implement OnFragmentInteractionListener");
+//        }
     }
 
     @Override
@@ -97,7 +92,7 @@ public class PlatformFragment extends Fragment {
      * fragment to allow an interaction in this fragment to be communicated
      * to the activity and potentially other fragments contained in that
      * activity.
-     * <p>
+     * <p/>
      * See the Android Training lesson <a href=
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.

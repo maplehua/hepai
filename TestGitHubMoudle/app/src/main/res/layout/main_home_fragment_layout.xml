@@ -1,6 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ebf0ea">
 
-</LinearLayout>
+    <LinearLayout
+        android:id="@+id/enter_num_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_below="@+id/main_select"
+        android:layout_marginTop="28dp"
+        android:gravity="center">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18dp"
+            android:textColor="#93c5b9"
+            android:text="@string/home_enter_num_before"/>
+
+        <TextView
+            android:id="@+id/main_enter_num"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18dp"
+            android:textColor="#abac5e"
+            android:text="666"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18dp"
+            android:textColor="#93c5b9"
+            android:text="@string/home_enter_num_after"/>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/main_please"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="18dp"
+        android:textColor="#93c5b9"
+        android:text="@string/home_enter_num_take_pic"
+        android:layout_below="@+id/enter_num_layout"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="13dp"/>
+
+    <TextView
+        android:id="@+id/tmp_select"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="18dp"
+        android:textColor="#93c5b9"
+        android:text="@string/home_enter_num_select_pic"
+        android:layout_below="@+id/main_please"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="13dp"/>
+
+    <ImageView
+        android:id="@+id/main_select_pic"
+        android:layout_width="136dp"
+        android:layout_height="136dp"
+        android:layout_below="@+id/tmp_select"
+        android:layout_marginTop="73dp"
+        android:layout_marginLeft="30dp"
+        android:layout_alignParentLeft="true"
+        android:src="@drawable/picfolder"/>
+
+    <ImageView
+        android:id="@+id/main_open_camera"
+        android:layout_width="136dp"
+        android:layout_height="136dp"
+        android:layout_below="@+id/tmp_select"
+        android:layout_marginTop="73dp"
+        android:layout_marginRight="30dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignBaseline="@+id/main_select_pic"
+        android:src="@drawable/bigcamera"/>
+
+</RelativeLayout>

@@ -1,64 +1,135 @@
 package com.example.administrator.testgithubmoudle.src;
 
-import android.app.Activity;
-import android.content.Context;
+import android.graphics.Color;
+import android.support.v4.app.FragmentActivity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.hardware.Camera;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
+import android.support.v4.app.FragmentTabHost;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.TextView;
+import android.widget.TabHost;
 import android.widget.Toast;
 
 import com.example.administrator.testgithubmoudle.R;
-import com.example.administrator.testgithubmoudle.src.camera.CameraManager;
-import com.example.administrator.testgithubmoudle.src.utils.RequestManager;
-import com.handmark.pulltorefresh.library.PullToRefreshListView;
+import com.example.administrator.testgithubmoudle.src.adapter.HomeViewPagerAdapter;
+import com.example.administrator.testgithubmoudle.src.fragment.MainHomeFragment;
+import com.example.administrator.testgithubmoudle.src.fragment.PlatformFragment;
+import com.example.administrator.testgithubmoudle.src.ui.TitleBar;
 
+import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
-public class MainActivity extends Activity implements Callback{
+public class MainActivity extends FragmentActivity implements Callback{
 
-    private PullToRefreshListView mListView;
-    private ImageView mImageView;
+    private TitleBar mTitleBar;
+    private ViewPager mViewPager;
+    private FragmentTabHost mTabHost;
+    private View mDivLeft;
+    private View mDivRight;
 
-    private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
-    private Uri fileUri;
+    private HomeViewPagerAdapter mAdapter;
+
+    private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 0x12;
+    private static final int SELECT_IMAGE_ACTIVITY_REQUEST_CODE = 0x13;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        initView();
+        initData();
+        initListener();
 //        RequestManager.startTestRequest(this);
-
-        mImageView = (ImageView) findViewById(R.id.imageview);
-
-        openPicFolder();
 
     }
 
-    public void openPicFolder() {
-        //        Intent intent = new Intent();
-        Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        intent.setType("image/*");
-//        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(intent, 1);
+    private void initData() {
+        mAdapter = new HomeViewPagerAdapter(getSupportFragmentManager());
+        mViewPager.setAdapter(mAdapter);
+        mAdapter.notifyDataSetChanged();
+    }
+
+    private void initView() {
+        mTitleBar = (TitleBar) findViewById(R.id.title_bar);
+        mTitleBar.setTitle(getResources().getString(R.string.app_name));
+        mTitleBar.showBackBtn(false);
+        mViewPager = (ViewPager) findViewById(R.id.view_pager);
+        mTabHost = (FragmentTabHost) findViewById(android.R.id.tabhost);
+        mDivLeft = findViewById(R.id.divide_left);
+        mDivRight = findViewById(R.id.divide_right);
+
+        ImageView cameraView = new ImageView(this);
+        cameraView.setImageResource(R.drawable.camera);
+        ImageView platformView = new ImageView(this);
+        platformView.setImageResource(R.drawable.platform);
+        mTabHost.setup(this, getSupportFragmentManager(), android.R.id.tabcontent);
+        mTabHost.addTab(mTabHost.newTabSpec("home").setIndicator(cameraView),
+                MainHomeFragment.class, null);
+        mTabHost.addTab(mTabHost.newTabSpec("platform").setIndicator(platformView),
+                PlatformFragment.class, null);
+    }
+
+    public void initListener() {
+        mTabHost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
+            @Override
+            public void onTabChanged(String tabId) {
+                if ("home".equals(tabId)) {
+                    mViewPager.setCurrentItem(0);
+                    showDivide(true, false);
+                } else {
+                    mViewPager.setCurrentItem(1);
+                    showDivide(false, true);
+                }
+
+            }
+        });
+
+        mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                mTabHost.setCurrentTab(position);
+//                if (0 == position) {
+//                    showDivide(true, false);
+//                } else {
+//                    showDivide(false, true);
+//                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+    }
+
+    private void showDivide(boolean left, boolean right) {
+       if (left) {
+           mDivLeft.setBackgroundColor(Color.RED);
+       } else {
+           mDivLeft.setBackgroundColor(Color.TRANSPARENT);
+       }
+
+        if (right) {
+            mDivRight.setBackgroundColor(Color.RED);
+        } else {
+            mDivRight.setBackgroundColor(Color.TRANSPARENT);
+        }
     }
 
     public void initPullRefreshListView() {
@@ -75,53 +146,47 @@ public class MainActivity extends Activity implements Callback{
 //        adapter.notifyDataSetChanged();
     }
 
-    public void openCamera() {
-        //        CameraManager.test();
-
-
-        // create Intent to take a picture and return control to the calling application
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        fileUri = CameraManager.getOutputMediaFileUri(CameraManager.MEDIA_TYPE_IMAGE); // create a file to save the image
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri); // set the image file name
-        //调取前置摄像头
-        intent.putExtra("android.intent.extras.CAMERA_FACING", 1);
-        intent.putExtra("camerasensortype", 3);
-        // 自动对焦
-        intent.putExtra("autofocus", true);
-        // start the image capture Intent
-        startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
-    }
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         //http://www.jb51.net/article/32939.htm
-        if (null != data) {
-            if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
+        //requestCode is not the code I set.
+        try {
+            if (null != data) {
                 if (resultCode == RESULT_OK) {
                     // Image captured and saved to fileUri specified in the Intent
-                    Toast.makeText(this, "Image saved to:\n" +
-                            data.getData(), Toast.LENGTH_LONG).show();
+                    Log.e("maple", "camera succeed!  " + data.getData());
+                    File file = new File(String.valueOf(data.getData()));
+                    File[] pics = file.listFiles();
+                    for (File f : pics) {
+                        Log.e("maple", f.getName());
+                    }
                 } else if (resultCode == RESULT_CANCELED) {
                     // User cancelled the image capture
-                } else {
-                    // Image capture failed, advise user
+                    Log.e("maple", "camera cancelled!");
                 }
-            } else if (requestCode == 1) {
-                Uri uri = data.getData();
-                Cursor cursor = getContentResolver().query(uri, null,
-                        null, null, null);
-                cursor.moveToFirst();
-                String imgNo = cursor.getString(0); // 图片编号
-                String imgPath = cursor.getString(1); // 图片文件路径
-                String imgSize = cursor.getString(2); // 图片大小
-                String imgName = cursor.getString(3); // 图片文件名
-                cursor.close();
+            } else {
+                if (resultCode == RESULT_OK) {
+                    Log.e("maple", "select pic result");
+                    Uri uri = data.getData();
+                    Cursor cursor = getContentResolver().query(uri, null,
+                            null, null, null);
+                    cursor.moveToFirst();
+                    String imgNo = cursor.getString(0); // 图片编号
+                    String imgPath = cursor.getString(1); // 图片文件路径
+                    String imgSize = cursor.getString(2); // 图片大小
+                    String imgName = cursor.getString(3); // 图片文件名
+                    cursor.close();
 
-                BitmapFactory.Options options = new BitmapFactory.Options();
-                options.inJustDecodeBounds = false;
-                options.inSampleSize = 10;
-                Bitmap bitmap = BitmapFactory.decodeFile(imgPath, options);
-                mImageView.setImageBitmap(bitmap);
+                    BitmapFactory.Options options = new BitmapFactory.Options();
+                    options.inJustDecodeBounds = false;
+                    options.inSampleSize = 10;
+                    Bitmap bitmap = BitmapFactory.decodeFile(imgPath, options);
+//                mImageView.setImageBitmap(bitmap);
+                }
             }
+
+        } catch (Exception e) {
+
         }
 
     }

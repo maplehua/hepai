@@ -4,21 +4,76 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:background="#ebf0ea"
     tools:context=".src.MainActivity">
 
-    <com.handmark.pulltorefresh.library.PullToRefreshListView
-        android:id="@+id/listview"
+    <com.example.administrator.testgithubmoudle.src.ui.TitleBar
+        android:id="@+id/title_bar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone"/>
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"/>
 
-    <ImageView
-        android:id="@+id/imageview"
+    <android.support.v4.app.FragmentTabHost
+        android:id="@android:id/tabhost"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_below="@id/title_bar"
+        android:background="#adc8c3">
+
+        <TabWidget
+            android:id="@android:id/tabs"
+            android:layout_width="match_parent"
+            android:layout_height="21dp"
+            android:orientation="horizontal"
+            android:layout_gravity="center">
+        </TabWidget>
+
+        <FrameLayout
+            android:id="@android:id/tabcontent"
+            android:layout_width="match_parent"
+            android:layout_height="0dip"
+            android:layout_weight="1"
+            android:layout_gravity="center"/>
+
+    </android.support.v4.app.FragmentTabHost>
+
+    <LinearLayout
+        android:id="@+id/divide_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_below="@android:id/tabhost"
+        android:weightSum="2">
+
+        <View
+            android:id="@+id/divide_left"
+            android:layout_width="0dp"
+            android:layout_height="5dp"
+            android:layout_weight="1"
+            android:background="@android:color/holo_red_dark"
+            android:visibility="visible"/>
+
+        <View
+            android:id="@+id/divide_right"
+            android:layout_width="0dp"
+            android:layout_height="5dp"
+            android:layout_weight="1"
+            android:visibility="visible"/>
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/divide_line"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@android:id/tabhost"
+        android:background="@android:color/black"
+        android:alpha="0.1"/>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/view_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleType="fitCenter"/>
+        android:layout_below="@id/divide_line"/>
+
 </RelativeLayout>
