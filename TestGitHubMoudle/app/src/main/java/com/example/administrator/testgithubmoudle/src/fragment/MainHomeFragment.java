@@ -1,27 +1,21 @@
 package com.example.administrator.testgithubmoudle.src.fragment;
 
 import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
-import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.administrator.testgithubmoudle.R;
-import com.example.administrator.testgithubmoudle.src.Application;
-import com.example.administrator.testgithubmoudle.src.camera.CameraManager;
+import com.example.administrator.testgithubmoudle.src.MainActivity;
+import com.example.administrator.testgithubmoudle.src.ui.BaseActivity;
+
+import java.io.File;
 
 /**
  * Created by Administrator on 2016/8/27.
@@ -34,16 +28,12 @@ public class MainHomeFragment extends Fragment {
 
     private Uri fileUri;
 
-    private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 0x12;
-    private static final int SELECT_IMAGE_ACTIVITY_REQUEST_CODE = 0x13;
+    private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1;
+    private static final int SELECT_IMAGE_ACTIVITY_REQUEST_CODE = 2;
 
     private Activity mContext;
 
     public MainHomeFragment() {
-        Bundle bundle = getArguments();
-        if (null != bundle) {
-            mContext = (Activity) bundle.get("context");
-        }
     }
 
     @Override
@@ -89,28 +79,13 @@ public class MainHomeFragment extends Fragment {
     }
 
     public void openPicFolder() {
-//        Intent intent = new Intent();
-        Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        intent.setType("image/*");
-//        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(intent, SELECT_IMAGE_ACTIVITY_REQUEST_CODE);
+        //if startActivity here directly, the resultCode which we get from onActivityResult() is not the one we set
+        //for now we don't know why
+        ((BaseActivity)mContext).openPicFolder();
     }
 
     public void openCamera() {
-        //        CameraManager.test();
-
-
-        // create Intent to take a picture and return control to the calling application
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        fileUri = CameraManager.getOutputMediaFileUri(CameraManager.MEDIA_TYPE_IMAGE); // create a file to save the image
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri); // set the image file name
-        //调取前置摄像头
-        intent.putExtra("android.intent.extras.CAMERA_FACING", 1);
-        intent.putExtra("camerasensortype", 3);
-        // 自动对焦
-        intent.putExtra("autofocus", true);
-        // start the image capture Intent
-        startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE); // MainActivity
+        ((BaseActivity)mContext).openCamera();
     }
 
 }

@@ -79,4 +79,10 @@ public class TitleBar extends RelativeLayout {
             mShare.setOnClickListener(listener);
         }
     }
+
+    public void setTitleClickListener(OnClickListener listener) {
+        if (null != mTitle) {
+            mTitle.setOnClickListener(listener);
+        }
+    }
 }

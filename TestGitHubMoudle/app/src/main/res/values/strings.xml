@@ -5,6 +5,9 @@
     <string name="home_enter_num_take_pic">请拍一张</string>
     <string name="home_enter_num_select_pic">或选择已有照片</string>
 
+    <string name="result_button">继续</string>
+    <string name="result_title">返回</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
