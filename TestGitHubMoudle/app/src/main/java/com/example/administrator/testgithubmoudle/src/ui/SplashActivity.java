@@ -40,6 +40,7 @@ public class SplashActivity extends FragmentActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_splash);
         initView();
     }
 
@@ -56,11 +57,12 @@ public class SplashActivity extends FragmentActivity{
             public void run() {
                 startMainActivity();
             }
-        }, 800);
+        }, 1800);
     }
 
     private void startMainActivity() {
         Intent mainIntent = new Intent(this, MainActivity.class);
         startActivity(mainIntent);
+        finish();
     }
 }
