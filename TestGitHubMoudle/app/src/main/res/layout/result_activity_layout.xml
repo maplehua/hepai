@@ -19,8 +19,20 @@
         android:textColor="@android:color/white"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="30dp"
+        android:layout_marginLeft="100dp"
+        android:background="@drawable/circile_button" />
+
+    <Button
+        android:id="@+id/result_button_complete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/commit_button"
+        android:textSize="20sp"
+        android:textColor="@android:color/white"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="30dp"
         android:background="@drawable/circile_button"
-        android:layout_centerHorizontal="true"/>
+        android:layout_marginLeft="200dp"/>
 
     <ListView
         android:id="@+id/result_list_view"

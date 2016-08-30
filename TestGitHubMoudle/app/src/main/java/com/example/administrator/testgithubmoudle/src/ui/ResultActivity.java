@@ -1,30 +1,36 @@
 package com.example.administrator.testgithubmoudle.src.ui;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
 
 import com.example.administrator.testgithubmoudle.R;
-import com.example.administrator.testgithubmoudle.src.MainActivity;
 import com.example.administrator.testgithubmoudle.src.adapter.ResultImageAdapter;
+import com.example.administrator.testgithubmoudle.src.utils.RequestManager;
 import com.example.administrator.testgithubmoudle.src.utils.StringUtil;
 
+import java.io.IOException;
 import java.util.ArrayList;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
 
 /**
  * Created by Administrator on 2016/8/27.
  */
-public class ResultActivity extends BaseActivity {
+public class ResultActivity extends BaseActivity implements Callback{
 
     private static ArrayList<String> mImageList;
     private ResultImageAdapter mAdapter;
     private ListView mList;
     private TitleBar mTitleBar;
     private Button mContinueBtn;
+    private Button mCommitBtn;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -38,6 +44,7 @@ public class ResultActivity extends BaseActivity {
     private void initView() {
         mList = (ListView) findViewById(R.id.result_list_view);
         mContinueBtn = (Button) findViewById(R.id.result_button);
+        mCommitBtn = (Button) findViewById(R.id.result_button_complete);
         mTitleBar = (TitleBar) findViewById(R.id.result_title_bar);
     }
 
@@ -46,14 +53,14 @@ public class ResultActivity extends BaseActivity {
             mImageList = new ArrayList<>();
         }
         if (null != getIntent() ) {
-            String imgPath = getIntent().getStringExtra(IMAGE_PATH);
-            if (!StringUtil.isEmptyOrNull(String.valueOf(imgPath))) {
-                mImageList.add(imgPath);
-            }
-
             boolean isClean = getIntent().getBooleanExtra(IS_FROM, false);
             if (!isClean) {
                 mImageList.clear();
+            }
+
+            String imgPath = getIntent().getStringExtra(IMAGE_PATH);
+            if (!StringUtil.isEmptyOrNull(String.valueOf(imgPath))) {
+                mImageList.add(imgPath);
             }
         }
 
@@ -81,7 +88,26 @@ public class ResultActivity extends BaseActivity {
                 startActivity(intent);
             }
         });
+
+        mCommitBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RequestManager.startImageRequest(ResultActivity.this, mImageList);
+            }
+        });
     }
 
 
+    @Override
+    public void onFailure(Call call, IOException e) {
+
+    }
+
+    @Override
+    public void onResponse(Call call, Response response) throws IOException {
+        Log.d("maple", "okHttp--onResponse");
+        if (response != null && response.isSuccessful()) {
+            Log.d("maple", "Response body = " + response.body().string());
+        }
+    }
 }

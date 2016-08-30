@@ -42,7 +42,7 @@ public class MainActivity extends BaseActivity implements Callback{
         initView();
         initData();
         initListener();
-//        RequestManager.startTestRequest(this);
+//        RequestManager.startImageRequest(this);
 
     }
 

@@ -6,6 +6,7 @@
     <string name="home_enter_num_select_pic">或选择已有照片</string>
 
     <string name="result_button">继续</string>
+    <string name="commit_button">提交</string>
     <string name="result_title">返回</string>
 
     <!-- TODO: Remove or change this placeholder text -->
